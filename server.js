@@ -2,6 +2,9 @@ var http = require("http");
 var https = require("https");
 var URL = require("url");
 
+var key = process.env.SECRET;
+
+
 function postShortly(url, text) {
   setTimeout(() => {
     var options = URL.parse(url);
@@ -24,6 +27,10 @@ http.createServer((req,res) => {
     data.join("")
       .split("&").map(k => k.split("="))
       .map(k => params[decodeURIComponent(k[0])] = decodeURIComponent(k[1].replace(/\+/g, " ")));
+    if (params.token !== key) {
+    	res.statusCode = 403;
+    	return res.end("Go away");
+    }
     postShortly(params.response_url, params.text);
     res.end("Ok, will post shortly");
   });

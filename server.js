@@ -26,6 +26,7 @@ http.createServer((req,res) => {
     var params = {};
     data.join("")
       .split("&").map(k => k.split("="))
+      .filter(k => k.length > 1)
       .map(k => params[decodeURIComponent(k[0])] = decodeURIComponent(k[1].replace(/\+/g, " ")));
     if (params.token !== key) {
     	res.statusCode = 403;

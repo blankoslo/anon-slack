@@ -1,6 +1,7 @@
 var http = require("http");
 var https = require("https");
 var URL = require("url");
+var crypto = require("crypto");
 
 var key = Buffer.from(process.env.SECRET);
 

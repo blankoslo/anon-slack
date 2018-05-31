@@ -2,7 +2,7 @@ var http = require("http");
 var https = require("https");
 var URL = require("url");
 
-var key = process.env.SECRET;
+var key = Buffer.from(process.env.SECRET);
 
 
 function postShortly(url, text) {
@@ -28,7 +28,8 @@ http.createServer((req,res) => {
       .split("&").map(k => k.split("="))
       .filter(k => k.length > 1)
       .map(k => params[decodeURIComponent(k[0])] = decodeURIComponent(k[1].replace(/\+/g, " ")));
-    if (params.token !== key) {
+    var token = Buffer.from(params.token);
+    if (token.length !== key.length || !crypto.timingSafeEqual(token, key)) {
     	res.statusCode = 403;
     	return res.end("Go away");
     }
